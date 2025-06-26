@@ -7,9 +7,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import org.junit.Assert;
 
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.*;
 
 public class GetBookings {
 
@@ -26,40 +29,35 @@ public class GetBookings {
     Response res_validate;
 
     @Given("I want to see the list of rooms")
-    public void adminReceiveToken(){
-
-
-
-
-    }
-
-   /* @And("The token is validated")
-    public void the_token_is_validated() {
-        System.out.println("to implement...2 ");
-        payloadToken.setToken(token_created);
-        res_validate = given().contentType(ContentType.JSON)
-
-                .body(payloadToken.toString())
-                .post(URL.post_url_to_validate_token);
-    }*/
-
-    @When("I want to read the bookings for a room")
-    public void i_want_to_read_the_bookings_for_a_room() {
+    public void i_want_to_see_the_list_of_rooms(){
         token_created = token.validToken();
         given()
                 .queryParam("roomid",2)
                 .cookie("token=", token_created)
-                .log().all()
-
-                .get(URL.get_url_to_retrive_booking_room)
-        .then()
-                .statusCode(200)
                 .log().all();
-        System.out.println("to implement... 3");
+
+    }
+
+
+    @When("I want to read the bookings for a room")
+    public void i_want_to_read_the_bookings_for_a_room() {
+        token_created = token.validToken();
+        res = when()
+                .get(URL.get_url_to_retrive_booking_room);
+
     }
     @Then("I should receive all existing bookings")
     public void i_should_receive_all_existing_bookings() {
-        System.out.println("to implement... 4");
+        res.then().statusCode(200)
+                .log().all();
+
+        String name = res.jsonPath().get("bookings[0].firstname").toString();
+        Assert.assertEquals(name,"Erica");
+        String lastname = res.jsonPath().get("bookings[0].lastname").toString();
+        Assert.assertEquals(lastname,"Bowthorpe");
+        String checkout = res.jsonPath().get("bookings[0].checkout").toString();
+        Assert.assertEquals(checkout,"2026-02-04");
+
     }
 
 }

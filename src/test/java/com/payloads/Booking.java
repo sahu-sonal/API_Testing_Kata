@@ -1,76 +1,93 @@
+
 package com.payloads;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+
 
 public class Booking {
 
-    public class BookingInformation{
-         int bookingid;
-         int roomid;
-        String firstname;
-        String lastname;
-        boolean depositpaid;
-        Bookingdates bookingdates;
+    private Integer bookingid;
+    private Integer roomid;
+    private String firstname;
+    private String lastname;
+    private Boolean depositpaid;
+    private String email;
+    private String phone;
+    private Bookingdates bookingdates;
+    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-        public int getBookingid() {
-            return bookingid;
-        }
-
-        public void setBookingid(int bookingid) {
-            this.bookingid = bookingid;
-        }
-
-        public int getRoomid() {
-            return roomid;
-        }
-
-        public void setRoomid(int roomid) {
-            this.roomid = roomid;
-        }
-
-        public String getFirstname() {
-            return firstname;
-        }
-
-        public void setFirstname(String firstname) {
-            this.firstname = firstname;
-        }
-
-        public String getLastname() {
-            return lastname;
-        }
-
-        public void setLastname(String lastname) {
-            this.lastname = lastname;
-        }
-
-        public boolean isDepositpaid() {
-            return depositpaid;
-        }
-
-        public void setDepositpaid(boolean depositpaid) {
-            this.depositpaid = depositpaid;
-        }
-
-        public Bookingdates getBookingdates() {
-            return bookingdates;
-        }
-
-        public void setBookingdates(Bookingdates bookingdates) {
-            this.bookingdates = bookingdates;
-        }
-
-
+    public Integer getBookingid() {
+        return bookingid;
     }
 
-    public class Bookingdates{
-         String checkin;
-         String checkout;
+    public void setBookingid(Integer bookingid) {
+        this.bookingid = bookingid;
     }
 
-    public class Root{
-         ArrayList<Booking> bookings;
+    public Integer getRoomid() {
+        return roomid;
     }
 
+    public void setRoomid(Integer roomid) {
+        this.roomid = roomid;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public Boolean getDepositpaid() {
+        return depositpaid;
+    }
+
+    public void setDepositpaid(Boolean depositpaid) {
+        this.depositpaid = depositpaid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Bookingdates getBookingdates() {
+        return bookingdates;
+    }
+
+    public void setBookingdates(Bookingdates bookingdates) {
+        this.bookingdates = bookingdates;
+    }
+
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 
 }

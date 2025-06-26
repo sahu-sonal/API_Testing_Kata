@@ -2,6 +2,7 @@ package com.booking.stepdefinitions;
 
 
 import com.api.URL;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.payloads.Credentials;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.util.JSONPObject;
 import io.cucumber.java.en.Given;
@@ -31,8 +32,9 @@ public class GetBookings {
     Response res_validate;
 
     @Given("I want to see the list of rooms")
-    public void i_want_to_see_the_list_of_rooms(){
+    public void i_want_to_see_the_list_of_rooms() throws JsonProcessingException {
         token_created = token.validToken();
+        System.out.println("########### "+token_created);
         given()
                 .queryParam("roomid",2)
                 .cookie("token=", token_created)
@@ -42,7 +44,7 @@ public class GetBookings {
 
 
     @When("I want to read the bookings for a room")
-    public void i_want_to_read_the_bookings_for_a_room() {
+    public void i_want_to_read_the_bookings_for_a_room() throws JsonProcessingException {
         token_created = token.validToken();
         res = when()
                 .get(URL.get_url_to_retrive_booking_room);

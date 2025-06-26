@@ -44,6 +44,23 @@ public class ClientInformation {
     }
 
 
+    public static Map<String,Object> updateClientNameAndLastName() {
+
+        Map<String, Object> updated_info = new HashMap<String, Object>();
+        updated_info.put("roomid", 5);
+        updated_info.put("firstname", "Jimmy");
+        updated_info.put("lastname", "Love");
+        updated_info.put("depositpaid", false);
+        Map<String, Object> dates = new HashMap<String, Object>();
+        dates.put("checkin", "2025-06-25");
+        dates.put("checkout", "2025-07-02");
+        updated_info.put("bookingdates", dates);
+
+        return updated_info;
+
+    }
+
+
 
 
 }

@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.internal.RestAssuredResponseImpl;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 import org.junit.Assert;
 
 import static io.restassured.RestAssured.given;
@@ -45,7 +46,6 @@ public class createBooking {
         res= given()
                 .queryParam("roomid",5)
                 .cookie("token", tokenValue)
-                .log().all()
                 .get(URL.get_url_to_retrive_booking_room);
 
         String name = res.jsonPath().get("bookings[0].firstname").toString();

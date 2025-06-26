@@ -48,12 +48,7 @@ public class GetBookings {
         Assert.assertEquals(name,"Erica");
         String lastname = res.jsonPath().get("bookings[0].lastname").toString();
         Assert.assertEquals(lastname,"Bowthorpe");
-        //String checkout = res.jsonPath().get("bookings[0].checkout").toString();
-        //Assert.assertEquals(checkout,"2026-02-04");
 
-        //JSONObject jo = new JSONObject();
-        //String n = jo.getJSONArray("bookings").getJSONObject(2).get("firstname").toString();
-        //Assert.assertEquals(n,"James");
     }
 
 }

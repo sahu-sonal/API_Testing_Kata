@@ -17,5 +17,5 @@ public class createBooking {
     public void user_should_get_the_success_status_code() {
 
     }
-   
+
 }

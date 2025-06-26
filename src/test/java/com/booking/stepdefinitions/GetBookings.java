@@ -3,10 +3,12 @@ package com.booking.stepdefinitions;
 
 import com.api.URL;
 import com.payloads.Credentials;
+import io.cucumber.core.internal.com.fasterxml.jackson.databind.util.JSONPObject;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 import org.junit.Assert;
 
 
@@ -58,6 +60,9 @@ public class GetBookings {
         String checkout = res.jsonPath().get("bookings[0].checkout").toString();
         Assert.assertEquals(checkout,"2026-02-04");
 
+        JSONObject jo = new JSONObject();
+        String n = jo.getJSONArray("bookings").getJSONObject(2).get("firstname").toString();
+        Assert.assertEquals(n,"James");
     }
 
 }

@@ -15,31 +15,21 @@ public class ClientInformation {
         this.booking = booking;
     }
 
-    public static Map<String,Object> getAllClientInfo(){
+    public static Map<String,Object> getAllClientInfo(String roomid, String lastname, String firstname,Boolean depositpaid, String checkin, String checkout){
 
         Map<String,Object> info = new HashMap<String,Object>();
-        info.put("roomid",5);
-        info.put("firstname","Daniele");
-        info.put("lastname","Marino");
-        info.put("depositpaid",false);
+        info.put("roomid",roomid);
+        info.put("firstname",firstname);
+        info.put("lastname",lastname);
+        info.put("depositpaid",depositpaid);
         Map<String,Object> dates= new HashMap<String,Object>();
-        dates.put("checkin","2025-06-25");
-        dates.put("checkout","2025-07-02");
+        dates.put("checkin",checkin);
+        dates.put("checkout",checkout);
         info.put("bookingdates",dates);
 
         return info;
 
-/*
-        payload.setRoomid("6");
-        payload.setFirstname("Daniele");
-        payload.setLastname("Marino");
-        payload.setDepositpaid(false);
-        payload.setEmail("marino@gmail.com");
-        payload.setPhone("716900001111");
-        payload.setBookingdates();
-        payloadDates.setCheckin("2026-07-02");
-        payloadDates.setCheckout("2026-07-06");
-*/
+
 
     }
 
@@ -47,7 +37,7 @@ public class ClientInformation {
     public static Map<String,Object> updateClientNameAndLastName() {
 
         Map<String, Object> updated_info = new HashMap<String, Object>();
-        updated_info.put("roomid", 5);
+        updated_info.put("roomid", 1000);
         updated_info.put("firstname", "Jimmy");
         updated_info.put("lastname", "Love");
         updated_info.put("depositpaid", false);

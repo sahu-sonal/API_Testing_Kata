@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Booking {
 
-    private Integer bookingid;
+
     private Integer roomid;
     private String firstname;
     private String lastname;
@@ -16,15 +16,7 @@ public class Booking {
     private String email;
     private String phone;
     private Bookingdates bookingdates;
-    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    public Integer getBookingid() {
-        return bookingid;
-    }
-
-    public void setBookingid(Integer bookingid) {
-        this.bookingid = bookingid;
-    }
 
     public Integer getRoomid() {
         return roomid;
@@ -81,13 +73,5 @@ public class Booking {
     public void setBookingdates(Bookingdates bookingdates) {
         this.bookingdates = bookingdates;
     }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }
+

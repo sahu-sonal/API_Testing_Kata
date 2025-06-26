@@ -9,7 +9,6 @@ Feature: Test the booking functionality
     Then I should receive all existing bookings
 
   Scenario: Create a booking
-    Given I want to book a room for a holiday
     When I make a reservation inserting all the information
     Then I receive the reservation and the process ends successfully
 

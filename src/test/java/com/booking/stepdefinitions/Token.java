@@ -14,10 +14,13 @@ import static io.restassured.RestAssured.given;
 
 public class Token {
 
+    private TestContext context;
     Credentials payload = new Credentials();
     private Response res;
     String token_created;
-
+    public Token(TestContext context){
+        this.context = context;
+    }
 
     @Given("I have a valid token")
     public String validToken() throws JsonProcessingException {
@@ -37,6 +40,7 @@ public class Token {
                 .post(URL.post_url_to_create_token);
 
         token_created = res.jsonPath().get("token").toString();
+        context.setToken(token_created);
         System.out.println("inside Token class:  "+token_created);
        return token_created;
 

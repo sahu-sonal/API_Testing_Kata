@@ -1,0 +1,7 @@
+<suite name="Booking API Suite">
+    <test name = "Create Booking Flow">
+        <classes>
+            <class name="com.booking.TesNGBooking.CreateBooking"/>
+        </classes>
+    </test>
+</suite>

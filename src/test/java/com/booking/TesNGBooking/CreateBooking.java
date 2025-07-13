@@ -5,14 +5,12 @@ import com.booking.models.CreateBookingRequest;
 import com.booking.utils.TestSuiteSetup;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
-import org.junit.platform.suite.api.Suite;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +30,7 @@ public class CreateBooking extends TestSuiteSetup {
         };
     }
 
-    //@Test(dataProvider = "CreateBookingDetails",groups = {"sanity","regression"})
+    @Test(dataProvider = "CreateBookingDetails",groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Create Booking") @Owner("Sivakumari")
     public void createBooking(int roomId,String firstName,String lastName,Boolean depositPaid,String email,String phone,int statusCode,String testDesc) {
@@ -55,7 +53,7 @@ public class CreateBooking extends TestSuiteSetup {
     @DataProvider(name = "CreateBookingErrorMessages")
     public Object[][] createBookingNegCases() {
         return new Object[][]{
-                //roomid,FirstName,LastName,DespositPaid,email,phone
+                //roomid,FirstName,LastName,DespositPaid,email,phone,StatusCode,ErrorMsg,Test Case Description
                 {null,"Siva","Kumari",true,"test1@gmail.com","24433234324",400,Arrays.asList("must be greater than or equal to 1"),"Validate When Room ID is null"},
                 // First Name field Cases
                 {2,"Si","Kumari",true,"test1@gmail.com","24433234324",400,Arrays.asList("size must be between 3 and 18"),"Validate When FirstName is less than 3"},
@@ -94,15 +92,14 @@ public class CreateBooking extends TestSuiteSetup {
         };
     }
 
-
     @Test(dataProvider = "CreateBookingErrorMessages",groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.CRITICAL) @Feature("Create Booking") @Owner("Sivakumari")
-   public void bookingErrorMessageValidation(Integer roomId, String firstName, String lastName, Boolean depositPaid, String email, String phone, int statusCode, List<String> errorMsg, String testDesc) {
-        BookingServiceImpl bookingService = new BookingServiceImpl(null);
+    public void bookingFieldsErrorMsg(Integer roomId, String firstName, String lastName, Boolean depositPaid, String email, String phone, int statusCode, List<String> errorMsg, String testDesc) {
+        BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
             Allure.description(testDesc);;
-            CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-23","2025-08-24");
+            CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-11","2025-08-12");
             CreateBookingRequest createBookingRequest = new CreateBookingRequest(roomId,firstName,lastName,depositPaid,email,phone,bookingDates);
             Response response = bookingService.postCreateBooking(createBookingRequest);
             Assert.assertEquals(response.statusCode(),statusCode);
@@ -113,6 +110,71 @@ public class CreateBooking extends TestSuiteSetup {
             System.out.printf(String.valueOf(e));
         }
     }
+
+
+    @DataProvider(name = "BookingDates")
+    public Object[][] BookingDatesNegCases() {
+        return new Object[][]{
+                //CheckIn,CheckOut,StatusCode,ErrorMsg,Test Case Description
+                {null, "2025-12-01",400, Arrays.asList("must not be null"), "Checkin Date is null"},
+                {"2025-12-01", null,400, Arrays.asList("must not be null"), "CheckOut Date is null"},
+                {null, null,400, Arrays.asList("must not be null","must not be null"), "CheckOut Date is null"},
+                {"2025/12/01", "2025-12-02",400, Arrays.asList("Failed to create booking"), "Checkin Date is format pattern is wrong"},
+                {"2025-12-01", "2025/12/02",400, Arrays.asList("Failed to create booking"), "CheckOut Date is format pattern is wrong"},
+                {"2025-12-01", "2025-12-02",400, Arrays.asList("Both Dates are Same"), "Both Checkin and Checkout date is Same"},
+                {"2024-12-01", "2025-11-30",400, Arrays.asList("Checkin Date is less than Current Date"), "Checkin Date is less than Current Date"},
+                {"2025-12-01", "2024-11-30",400, Arrays.asList("Checkout Date is less than Current Date"), "Checkout Date is less than Current Date"},
+                {"2025-12-01", "2025-11-30",400, Arrays.asList("Checkout Date is less than Checkin"), "Checkout Date is less than Checkin"},
+                {"2024-12-02", "2024-12-04",400, Arrays.asList("Checkin Date is less than Current Date","Checkout Date is less than Current Date"), "Checkout and Checkin Date is less than Current Date"},
+                {"test", "2025-12-01",400, Arrays.asList("Failed to create booking"), "Checkin Date is not Date Value"},
+                {"2025-12-01", "test",400, Arrays.asList("Failed to create booking"), "CheckOut Date is not Date Value"}
+        };
+    }
+
+    @Test(dataProvider = "BookingDates",groups = {"sanity","regression"})
+    @Epic("Booking Service API Tests")
+    @Severity(SeverityLevel.CRITICAL) @Feature("Create Booking") @Owner("Sivakumari")
+    public void bookingDatesErrorMsg(String checkin,String checkout,Integer statusCode,List<String> errorMsg,String testDesc)
+    {
+        BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
+        Allure.description(testDesc);
+        CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates(checkin,checkout);
+        CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
+        Response response = bookingService.postCreateBooking(createBookingRequest);
+        Assert.assertEquals(response.statusCode(),statusCode);
+        List<String> actualErrors = response.jsonPath().getList("errors");
+        Assert.assertEquals(new HashSet<>(actualErrors), new HashSet<>(errorMsg));
+    }
+
+    @Test(groups = {"sanity","regression"})
+    @Epic("Booking Service API Tests")
+    @Severity(SeverityLevel.MINOR) @Feature("Create Booking") @Owner("Sivakumari")
+    public void createBookingInvalidRequestType()
+    {
+        String testDesc = "Check the Error if HTTP Method is not POST";
+        BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
+        Allure.description(testDesc);
+        CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-23","2025-08-24");
+        CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
+        Response response = bookingService.putCreateBooking(createBookingRequest);
+        Assert.assertEquals(response.statusCode(),405);
+    }
+
+    @Test(groups = {"sanity","regression"})
+    @Epic("Booking Service API Tests")
+    @Severity(SeverityLevel.MINOR) @Feature("Create Booking") @Owner("Sivakumari")
+    public void createBookingInvalidEndpoint()
+    {
+        String testDesc = "Check the Error if EndPoint is Wrong";
+        BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
+        Allure.description(testDesc);
+        CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-23","2025-08-24");
+        CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
+        Response response = bookingService.postCreateBooking(createBookingRequest,"/bookingRoom");
+        Assert.assertEquals(response.statusCode(),404);
+    }
+
+
 
 
 }

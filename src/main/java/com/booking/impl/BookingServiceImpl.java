@@ -31,4 +31,16 @@ public class BookingServiceImpl {
         return response;
     }
 
+    public Response postCreateBooking(CreateBookingRequest createBookingRequest,String url) {
+        String payload = JsonUtil.toJson(createBookingRequest);
+        Response response = ApiUtils.post(ConfigReader.BASE_URL, url , headerMap,cookieMap,payload);
+        return response;
+    }
+
+    public Response putCreateBooking(CreateBookingRequest createBookingRequest) {;
+        String payload = JsonUtil.toJson(createBookingRequest);
+        Response response = ApiUtils.put(ConfigReader.BASE_URL, Constants.CREATE_BOOKING , headerMap,cookieMap,payload);
+        return response;
+    }
+
 }

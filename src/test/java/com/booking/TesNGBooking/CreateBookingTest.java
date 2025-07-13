@@ -2,6 +2,7 @@ package com.booking.TesNGBooking;
 
 import com.booking.impl.BookingServiceImpl;
 import com.booking.models.CreateBookingRequest;
+import com.booking.utils.TestDisplayName;
 import com.booking.utils.TestSuiteSetup;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
@@ -15,10 +16,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class CreateBooking extends TestSuiteSetup {
+public class CreateBookingTest extends TestSuiteSetup {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     @DataProvider(name = "CreateBookingDetails")
     public Object[][] positiveCase() {
         return new Object[][]{
@@ -36,7 +36,6 @@ public class CreateBooking extends TestSuiteSetup {
     public void createBooking(int roomId,String firstName,String lastName,Boolean depositPaid,String email,String phone,int statusCode,String testDesc) {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
-            Allure.description(testDesc);
             LocalDate checkinDate = LocalDate.now().plusDays(13);
             LocalDate checkoutDate = checkinDate.plusDays(1);
             CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates(checkinDate.format(formatter),checkoutDate.format(formatter));
@@ -98,7 +97,6 @@ public class CreateBooking extends TestSuiteSetup {
     public void bookingFieldsErrorMsg(Integer roomId, String firstName, String lastName, Boolean depositPaid, String email, String phone, int statusCode, List<String> errorMsg, String testDesc) {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
-            Allure.description(testDesc);;
             CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-13","2025-08-14");
             CreateBookingRequest createBookingRequest = new CreateBookingRequest(roomId,firstName,lastName,depositPaid,email,phone,bookingDates);
             Response response = bookingService.postCreateBooking(createBookingRequest);
@@ -110,7 +108,6 @@ public class CreateBooking extends TestSuiteSetup {
             System.out.printf(String.valueOf(e));
         }
     }
-
 
     @DataProvider(name = "BookingDates")
     public Object[][] BookingDatesNegCases() {
@@ -137,7 +134,6 @@ public class CreateBooking extends TestSuiteSetup {
     public void bookingDatesErrorMsg(String checkin,String checkout,Integer statusCode,List<String> errorMsg,String testDesc)
     {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
-        Allure.description(testDesc);
         CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates(checkin,checkout);
         CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
         Response response = bookingService.postCreateBooking(createBookingRequest);
@@ -149,11 +145,11 @@ public class CreateBooking extends TestSuiteSetup {
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.MINOR) @Feature("Create Booking") @Owner("Sivakumari")
+    @Description("Check the Error if HTTP Method is not POST")
+    @TestDisplayName("Check the Error if HTTP Method is not POST")
     public void createBookingInvalidRequestType()
     {
-        String testDesc = "Check the Error if HTTP Method is not POST";
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
-        Allure.description(testDesc);
         CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-23","2025-08-24");
         CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
         Response response = bookingService.putCreateBooking(createBookingRequest);
@@ -163,18 +159,16 @@ public class CreateBooking extends TestSuiteSetup {
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.MINOR) @Feature("Create Booking") @Owner("Sivakumari")
+    @Description("Check the Error if EndPoint is Wrong")
+    @TestDisplayName("Check the Error if EndPoint is Wrong")
     public void createBookingInvalidEndpoint()
     {
-        String testDesc = "Check the Error if EndPoint is Wrong";
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
-        Allure.description(testDesc);
         CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-23","2025-08-24");
         CreateBookingRequest createBookingRequest = new CreateBookingRequest(1, "Siva", "Kumari", true, "test1@gmail.com", "24433234324",bookingDates);
         Response response = bookingService.postCreateBooking(createBookingRequest,"/bookingRoom");
         Assert.assertEquals(response.statusCode(),404);
     }
-
-
 
 
 }

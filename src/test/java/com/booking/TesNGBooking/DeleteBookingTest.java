@@ -2,6 +2,7 @@ package com.booking.TesNGBooking;
 
 import com.booking.impl.BookingServiceImpl;
 import com.booking.models.GetBookingByRoomResponse;
+import com.booking.utils.TestDisplayName;
 import com.booking.utils.TestSuiteSetup;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
@@ -12,16 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DeleteBooking extends TestSuiteSetup {
-
+public class DeleteBookingTest extends TestSuiteSetup {
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Delete Booking") @Owner("Sivakumari")
+    @Description("Delete a Valid Booking")
+    @TestDisplayName("Delete a Valid Booking")
     public void deleteBooking() {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
-            String testDesc = "Delete a Valid Booking";
-            Allure.description(testDesc);
             int id = getBookingIdToDelete(bookingService);
             Response response = bookingService.deleteBookingDetails(id);
             Assert.assertEquals(response.statusCode(),200);
@@ -36,11 +36,11 @@ public class DeleteBooking extends TestSuiteSetup {
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Delete Booking") @Owner("Sivakumari")
+    @TestDisplayName("Delete a Booking that Does not exist")
+    @Description("Delete a Booking that Does not exist")
     public void deleteInvalidBooking() {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
-            String testDesc = "Delete a Booking that Does not exist";
-            Allure.description(testDesc);
             Response response = bookingService.deleteBookingDetails(100);
             Assert.assertEquals(response.statusCode(),500);
             Assert.assertEquals(response.jsonPath().getString("error"),"Failed to delete booking");
@@ -68,4 +68,5 @@ public class DeleteBooking extends TestSuiteSetup {
         }
         return bookingID;
     }
+
 }

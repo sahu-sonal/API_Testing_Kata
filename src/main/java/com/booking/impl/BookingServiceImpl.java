@@ -43,4 +43,15 @@ public class BookingServiceImpl {
         return response;
     }
 
+    public Response getBookingDetails(Map<String, Integer> params) {
+        Response response = ApiUtils.get(ConfigReader.BASE_URL, Constants.CREATE_BOOKING , params,cookieMap,headerMap);
+        return response;
+    }
+
+    public Response deleteBookingDetails(int id) {
+        Response response = ApiUtils.get(ConfigReader.BASE_URL, Constants.CREATE_BOOKING+"/"+id ,cookieMap,headerMap);
+        return response;
+    }
+
+
 }

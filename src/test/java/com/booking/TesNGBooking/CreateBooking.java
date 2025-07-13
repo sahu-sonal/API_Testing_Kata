@@ -23,21 +23,21 @@ public class CreateBooking extends TestSuiteSetup {
     public Object[][] positiveCase() {
         return new Object[][]{
                 //roomid,FirstName,LastName,DespositPaid,email,phone
-                {2,"Siva","Kumari",true,"test1@gmail.com","24433234324",200,"Success TestCase - Validate Create Booking"},
-                {4,"Siva","Kumari",false,"test1@gmail.com","24433234324",200,"Success TestCase - Validate Create Booking when DepositPaid is False"},
+                {1,"Siva","Kumari",true,"test1@gmail.com","24433234324",200,"Success TestCase - Validate Create Booking"},
+                {2,"Siva","Kumari",false,"test1@gmail.com","24433234324",200,"Success TestCase - Validate Create Booking when DepositPaid is False"},
                 {2,"Siva","Kumari",true,"test1@gmail.com","24433234324",500,"Negative TestCase - Validate Duplicate Create Booking"}
 
         };
     }
 
-    @Test(dataProvider = "CreateBookingDetails",groups = {"sanity","regression"})
+    @Test(dataProvider = "CreateBookingDetails",groups = {"sanity","regression","create"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Create Booking") @Owner("Sivakumari")
     public void createBooking(int roomId,String firstName,String lastName,Boolean depositPaid,String email,String phone,int statusCode,String testDesc) {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
             Allure.description(testDesc);
-            LocalDate checkinDate = LocalDate.now().plusDays(5);
+            LocalDate checkinDate = LocalDate.now().plusDays(13);
             LocalDate checkoutDate = checkinDate.plusDays(1);
             CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates(checkinDate.format(formatter),checkoutDate.format(formatter));
             CreateBookingRequest createBookingRequest = new CreateBookingRequest(roomId,firstName,lastName,depositPaid,email,phone,bookingDates);
@@ -99,7 +99,7 @@ public class CreateBooking extends TestSuiteSetup {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
         try {
             Allure.description(testDesc);;
-            CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-11","2025-08-12");
+            CreateBookingRequest.BookingDates bookingDates = new CreateBookingRequest.BookingDates("2025-08-13","2025-08-14");
             CreateBookingRequest createBookingRequest = new CreateBookingRequest(roomId,firstName,lastName,depositPaid,email,phone,bookingDates);
             Response response = bookingService.postCreateBooking(createBookingRequest);
             Assert.assertEquals(response.statusCode(),statusCode);
@@ -125,7 +125,7 @@ public class CreateBooking extends TestSuiteSetup {
                 {"2024-12-01", "2025-11-30",400, Arrays.asList("Checkin Date is less than Current Date"), "Checkin Date is less than Current Date"},
                 {"2025-12-01", "2024-11-30",400, Arrays.asList("Checkout Date is less than Current Date"), "Checkout Date is less than Current Date"},
                 {"2025-12-01", "2025-11-30",400, Arrays.asList("Checkout Date is less than Checkin"), "Checkout Date is less than Checkin"},
-                {"2024-12-02", "2024-12-04",400, Arrays.asList("Checkin Date is less than Current Date","Checkout Date is less than Current Date"), "Checkout and Checkin Date is less than Current Date"},
+                {"2024-12-25", "2024-12-26",400, Arrays.asList("Checkin Date is less than Current Date","Checkout Date is less than Current Date"), "Checkout and Checkin Date is less than Current Date"},
                 {"test", "2025-12-01",400, Arrays.asList("Failed to create booking"), "Checkin Date is not Date Value"},
                 {"2025-12-01", "test",400, Arrays.asList("Failed to create booking"), "CheckOut Date is not Date Value"}
         };

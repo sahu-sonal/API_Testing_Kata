@@ -2,6 +2,7 @@
     <test name = "Create Booking Flow">
         <classes>
             <class name="com.booking.TesNGBooking.CreateBooking"/>
+            <class name="com.booking.TesNGBooking.DeleteBooking"/>
         </classes>
     </test>
 </suite>

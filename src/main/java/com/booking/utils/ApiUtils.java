@@ -4,57 +4,61 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.Map;
+import java.util.Optional;
 
 public class ApiUtils extends TestSuiteSetup{
 
-    public static Response post(String baseURI, String postUrl, Map<String, String> headers, Map<String, String> cookies,
-                                Object bodyString) {
-        Response resObj = null;
-        if(baseURI !=null && !baseURI.equals("")) {
+    private static void setBaseUri(String baseURI) {
+        if (baseURI != null && !baseURI.isEmpty()) {
             RestAssured.baseURI = baseURI;
         }
-
-        RequestSpecification requestSpecificationObj = RestAssured.given().log().all();
-
-        if (headers != null && !headers.isEmpty()) {
-            requestSpecificationObj = requestSpecificationObj.headers(headers);
-        }
-
-        if (cookies != null && !cookies.isEmpty()) {
-            requestSpecificationObj = requestSpecificationObj.cookies(cookies);
-        }
-
-        if(bodyString != null && !bodyString.equals("")) {
-            requestSpecificationObj = requestSpecificationObj.body(bodyString);
-        }
-
-        resObj = requestSpecificationObj.log().all().post(postUrl).then().log().all().extract().response();
-
-        return resObj;
+    }
+    private static boolean isValidMap(Map<?, ?> map) {
+        return map != null && !map.isEmpty();
     }
 
-    public static Response put(String baseURI, String putUrl, Map<String, String> headers, Map<String, String> cookies,
-                                Object bodyString) {
-        Response resObj = null;
-        RestAssured.baseURI = baseURI;
-        RequestSpecification requestSpecificationObj = RestAssured.given();
-        resObj = requestSpecificationObj.headers(headers).cookies(cookies).body(bodyString).put(putUrl).then().log().all().extract().response();
-        return resObj;
+    private static boolean isValidBody(Object body) {
+        return !(body instanceof String s) || !s.isBlank();
     }
 
-    public static Response get(String baseURI, String getUrl, Map<String, Integer> params, Map<String, String> cookies, Map<String, String> headers) {
-        Response resObj = null;
-        RestAssured.baseURI = baseURI;
-        RequestSpecification requestSpecificationObj = RestAssured.given();
-        resObj = requestSpecificationObj.headers(headers).params(params).cookies(cookies).when().log().all().get(getUrl).then().log().all().extract().response();
-        return resObj;
+    private static RequestSpecification prepareRequest(Map<String, String> headers, Map<String, String> cookies, Object body) {
+        RequestSpecification request = RestAssured.given().log().all();
+
+        if (isValidMap(headers)) request.headers(headers);
+        if (isValidMap(cookies)) request.cookies(cookies);
+        if (body != null && isValidBody(body)) request.body(body);
+        return request;
     }
 
-    public static Response get(String baseURI, String getUrl, Map<String, String> cookies, Map<String, String> headers) {
-        Response resObj = null;
-        RestAssured.baseURI = baseURI;
-        RequestSpecification requestSpecificationObj = RestAssured.given();
-        resObj = requestSpecificationObj.headers(headers).cookies(cookies).when().log().all().delete(getUrl).then().log().all().extract().response();
-        return resObj;
+    public static Response post(String baseURI, String postUrl, Map<String, String> headers, Object body) {
+        setBaseUri(baseURI);
+        return prepareRequest(headers, null,body)
+                .post(postUrl)
+                .then().log().all().extract().response();
+    }
+
+    public static Response put(String baseURI, String putUrl, Map<String, String> headers, Map<String, String> cookies, Object body) {
+        setBaseUri(baseURI);
+        return prepareRequest(headers, cookies, body)
+                .put(putUrl)
+                .then().log().all().extract().response();
+    }
+
+    public static Response get(String baseURI, String getUrl, Map<String, ?> params, Map<String, String> cookies, Map<String, String> headers) {
+        setBaseUri(baseURI);
+        RequestSpecification request = prepareRequest(headers, cookies, null);
+        if (params != null && !params.isEmpty()) {
+            request.params(params);
+        }
+        return request
+                .get(getUrl)
+                .then().log().all().extract().response();
+    }
+
+    public static Response delete(String baseURI, String deleteUrl, Map<String, String> cookies, Map<String, String> headers) {
+        setBaseUri(baseURI);
+        return prepareRequest(headers, cookies, null)
+                .delete(deleteUrl)
+                .then().log().all().extract().response();
     }
 }

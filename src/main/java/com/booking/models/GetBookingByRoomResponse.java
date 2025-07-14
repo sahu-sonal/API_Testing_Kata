@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@JsonInclude()
 
 @JsonPropertyOrder({
         "bookings"
@@ -16,10 +16,7 @@ public class GetBookingByRoomResponse {
 
     @JsonProperty("bookings")
     private List<Booking> bookings;
-
-    public GetBookingByRoomResponse() {
-    }
-
+    public GetBookingByRoomResponse() {}
     public GetBookingByRoomResponse(List<Booking> bookings) {
         super();
         this.bookings = bookings;

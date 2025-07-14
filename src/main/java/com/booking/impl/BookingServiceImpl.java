@@ -27,29 +27,30 @@ public class BookingServiceImpl {
         // In case if any additional Header we want to add specific to this API
         HashMap<String, String> headers = new HashMap<>(headerMap);
         String payload = JsonUtil.toJson(createBookingRequest);
-        Response response = ApiUtils.post(ConfigReader.BASE_URL, Constants.CREATE_BOOKING , headerMap,cookieMap,payload);
+        Response response = ApiUtils.post(ConfigReader.BASE_URL, Constants.CREATE_BOOKING, headerMap, payload);
         return response;
     }
 
-    public Response postCreateBooking(CreateBookingRequest createBookingRequest,String url) {
+    public Response postCreateBooking(CreateBookingRequest createBookingRequest, String url) {
         String payload = JsonUtil.toJson(createBookingRequest);
-        Response response = ApiUtils.post(ConfigReader.BASE_URL, url , headerMap,cookieMap,payload);
+        Response response = ApiUtils.post(ConfigReader.BASE_URL, url, headerMap, payload);
         return response;
     }
 
-    public Response putCreateBooking(CreateBookingRequest createBookingRequest) {;
+    public Response putCreateBooking(CreateBookingRequest createBookingRequest) {
+        ;
         String payload = JsonUtil.toJson(createBookingRequest);
-        Response response = ApiUtils.put(ConfigReader.BASE_URL, Constants.CREATE_BOOKING , headerMap,cookieMap,payload);
+        Response response = ApiUtils.put(ConfigReader.BASE_URL, Constants.CREATE_BOOKING, headerMap, cookieMap, payload);
         return response;
     }
 
     public Response getBookingDetails(Map<String, Integer> params) {
-        Response response = ApiUtils.get(ConfigReader.BASE_URL, Constants.CREATE_BOOKING , params,cookieMap,headerMap);
+        Response response = ApiUtils.get(ConfigReader.BASE_URL, Constants.CREATE_BOOKING, params, cookieMap, headerMap);
         return response;
     }
 
     public Response deleteBookingDetails(int id) {
-        Response response = ApiUtils.get(ConfigReader.BASE_URL, Constants.CREATE_BOOKING+"/"+id ,cookieMap,headerMap);
+        Response response = ApiUtils.delete(ConfigReader.BASE_URL, Constants.CREATE_BOOKING + "/" + id, cookieMap, headerMap);
         return response;
     }
 

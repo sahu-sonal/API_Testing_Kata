@@ -8,9 +8,6 @@ import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DeleteBookingTest extends TestSuiteSetup {
@@ -23,12 +20,13 @@ public class DeleteBookingTest extends TestSuiteSetup {
         try {
             int id = getBookingIdToDelete(bookingService);
             Response response = bookingService.deleteBookingDetails(id);
+            Commons.logger("Response Status Code is :" + response.statusCode());
             Assert.assertEquals(response.statusCode(),200);
+            Commons.logger("Response Data is :" + response.jsonPath().get());
             Assert.assertTrue(response.jsonPath().get("success").equals(true));
         }
         catch (Exception e) {
             e.printStackTrace();
-            // ✅ Fail the test with proper message
             Assert.fail("Test failed due to exception: " + e.getMessage());
         }
     }
@@ -42,32 +40,27 @@ public class DeleteBookingTest extends TestSuiteSetup {
         Commons.setAllureLifecycle("Delete a Booking that Does not exist");
         try {
             Response response = bookingService.deleteBookingDetails(100);
+            Commons.logger("Response Status Code is :" + response.statusCode());
             Assert.assertEquals(response.statusCode(),500);
+            Commons.logger("Response Data is :" + response.jsonPath().get());
             Assert.assertEquals(response.jsonPath().getString("error"),"Failed to delete booking");
         }
         catch (Exception e) {
             e.printStackTrace();
-            // ✅ Fail the test with proper message
             Assert.fail("Test failed due to exception: " + e.getMessage());
         }
     }
 
     private int getBookingIdToDelete(BookingServiceImpl bookingService) {
-        Map<String,Integer> params = new HashMap<>();
-        int bookingID = 0;
-        params.put("roomid",1);
+        Map<String, Integer> params = Map.of("roomid", 1);
         Response response = bookingService.getBookingDetails(params);
+        Commons.logger("Response Status Code is :" + response.statusCode());
         GetBookingByRoomResponse getBookingByRoomResponse = response.as(GetBookingByRoomResponse.class);
-
-        List<GetBookingByRoomResponse.Booking> bookings = getBookingByRoomResponse.getBookings();
-
-        for (GetBookingByRoomResponse.Booking b : bookings) {
-            if(b.getFirstname().equals("Siva")) {
-                bookingID = b.getBookingid();
-                break;
-            }
-        }
-        return bookingID;
+        return getBookingByRoomResponse.getBookings().stream()
+                .filter(b -> "Siva".equals(b.getFirstname()))
+                .map(GetBookingByRoomResponse.Booking::getBookingid)
+                .findFirst()
+                .orElse(0);
     }
 
 }

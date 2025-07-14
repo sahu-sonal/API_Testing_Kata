@@ -1,6 +1,7 @@
 package com.booking.utils;
 
-import org.testng.ITest;
+import io.qameta.allure.restassured.AllureRestAssured;
+import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
 
 public abstract class TestSuiteSetup{
@@ -9,9 +10,9 @@ public abstract class TestSuiteSetup{
 
     @BeforeClass
     public void suiteSetup() {
-        System.out.println("Before Class ");
         accessToken = GenerateToken.generateAccessToken();
-        System.out.println("Access Token: " + accessToken);
+        if (RestAssured.filters().isEmpty()) {
+            RestAssured.filters(new AllureRestAssured());
+        }
     }
-
 }

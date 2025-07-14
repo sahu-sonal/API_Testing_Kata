@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@JsonInclude()
 @JsonPropertyOrder({
         "roomid",
         "firstname",
@@ -32,10 +32,7 @@ public class CreateBookingRequest {
     @JsonProperty("phone")
     private String phone;
 
-    public CreateBookingRequest() {
-    }
-
-    public CreateBookingRequest(Integer roomid, String firstname, String lastname, Boolean depositpaid,  String email, String phone,BookingDates bookingdates) {
+    public CreateBookingRequest(Integer roomid, String firstname, String lastname, Boolean depositpaid, String email, String phone, BookingDates bookingdates) {
         super();
         this.roomid = roomid;
         this.firstname = firstname;
@@ -45,6 +42,7 @@ public class CreateBookingRequest {
         this.email = email;
         this.phone = phone;
     }
+
     @JsonProperty("roomid")
     public Integer getRoomid() {
         return roomid;
@@ -76,7 +74,7 @@ public class CreateBookingRequest {
     }
 
     @JsonProperty("depositpaid")
-    public Boolean getDepositpaid() {
+    public Boolean getDepositPaid() {
         return depositpaid;
     }
 
@@ -114,7 +112,8 @@ public class CreateBookingRequest {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+
+    @JsonInclude()
     @JsonPropertyOrder({
             "checkin",
             "checkout"
@@ -127,6 +126,7 @@ public class CreateBookingRequest {
             this.checkin = checkin;
             this.checkout = checkout;
         }
+
         @JsonProperty("checkin")
         private String checkin;
         @JsonProperty("checkout")

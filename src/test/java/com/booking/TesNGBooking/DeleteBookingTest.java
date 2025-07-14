@@ -2,7 +2,7 @@ package com.booking.TesNGBooking;
 
 import com.booking.impl.BookingServiceImpl;
 import com.booking.models.GetBookingByRoomResponse;
-import com.booking.utils.TestDisplayName;
+import com.booking.utils.Commons;
 import com.booking.utils.TestSuiteSetup;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
@@ -17,10 +17,9 @@ public class DeleteBookingTest extends TestSuiteSetup {
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Delete Booking") @Owner("Sivakumari")
-    @Description("Delete a Valid Booking")
-    @TestDisplayName("Delete a Valid Booking")
     public void deleteBooking() {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
+        Commons.setAllureLifecycle("Delete a Existing Booking");
         try {
             int id = getBookingIdToDelete(bookingService);
             Response response = bookingService.deleteBookingDetails(id);
@@ -28,27 +27,29 @@ public class DeleteBookingTest extends TestSuiteSetup {
             Assert.assertTrue(response.jsonPath().get("success").equals(true));
         }
         catch (Exception e) {
-            System.out.printf(String.valueOf(e));
+            e.printStackTrace();
+            // ✅ Fail the test with proper message
+            Assert.fail("Test failed due to exception: " + e.getMessage());
         }
-
     }
 
     @Test(groups = {"sanity","regression"})
     @Epic("Booking Service API Tests")
     @Severity(SeverityLevel.BLOCKER) @Feature("Delete Booking") @Owner("Sivakumari")
-    @TestDisplayName("Delete a Booking that Does not exist")
     @Description("Delete a Booking that Does not exist")
     public void deleteInvalidBooking() {
         BookingServiceImpl bookingService = new BookingServiceImpl(accessToken);
+        Commons.setAllureLifecycle("Delete a Booking that Does not exist");
         try {
             Response response = bookingService.deleteBookingDetails(100);
             Assert.assertEquals(response.statusCode(),500);
             Assert.assertEquals(response.jsonPath().getString("error"),"Failed to delete booking");
         }
         catch (Exception e) {
-            System.out.printf(String.valueOf(e));
+            e.printStackTrace();
+            // ✅ Fail the test with proper message
+            Assert.fail("Test failed due to exception: " + e.getMessage());
         }
-
     }
 
     private int getBookingIdToDelete(BookingServiceImpl bookingService) {

@@ -20,6 +20,7 @@ public class GetMessages {
 
     @Then("I should receive all existing messages")
     public void iShouldReceiveAllExistingMessages() {
+        // Test commit: verifying Git setup
         response.then().statusCode(200)
                 .body("messages.size()", greaterThan(0))
                 .body("messages.id", everyItem(notNullValue()))

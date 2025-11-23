@@ -16,6 +16,8 @@
         <rest-assured.version>5.5.2</rest-assured.version>
         <junit-platform-suite.version>1.12.2</junit-platform-suite.version>
         <junit-jupiter.version>5.12.2</junit-jupiter.version>
+        <lombok.version>1.18.38</lombok.version>
+        <jackson.version>2.16.2</jackson.version>
     </properties>
 
     <dependencies>
@@ -57,6 +59,19 @@
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Jackson for JSON serialization/deserialization -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
 

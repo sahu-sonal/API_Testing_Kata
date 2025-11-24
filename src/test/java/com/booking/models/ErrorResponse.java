@@ -1,20 +1,18 @@
 package com.booking.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Model class representing authentication response
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    @JsonProperty("token")
-    private String token;
-    
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ErrorResponse {
     @JsonProperty("error")
     private String error;
 }

@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assertions;
+import utils.StringUtils;
 
 public class AuthStepDefinitions {
     // Store the response and auth response for validation
@@ -35,30 +36,26 @@ public class AuthStepDefinitions {
         // Use AuthService to send login request with default credentials
         response = authService.loginRequest(ConfigManager.USERNAME, ConfigManager.PASSWORD);
         authResponse = response.as(AuthResponse.class);
+        
+        // Store response in shared context for common step definitions
+        CommonStepDefinitions.setResponse(response);
     }
 
     @When("I send a POST request to {string} with username {string} and password {string}")
     public void i_send_a_post_request_to_with_username_and_password(String endpoint, String username, String password) {
-        // Handle empty strings - convert to null
-        String usernameValue = (username == null || username.trim().isEmpty()) ? null : username;
-        String passwordValue = (password == null || password.trim().isEmpty()) ? null : password;
+        // Use StringUtils helper to normalize empty strings to null
+        String usernameValue = StringUtils.normalizeString(username);
+        String passwordValue = StringUtils.normalizeString(password);
         
         // Use AuthService to send login request
         response = authService.loginRequest(usernameValue, passwordValue);
         authResponse = response.as(AuthResponse.class);
+        
+        // Store response in shared context for common step definitions
+        CommonStepDefinitions.setResponse(response);
     }
 
     // ==================== THEN STEPS ====================
-
-    @Then("the response status code should be {int}")
-    public void the_response_status_code_should_be(int expectedStatusCode) {
-        // Get actual status code from response
-        int actualStatusCode = response.getStatusCode();
-        
-        // Verify it matches expected status code
-        Assertions.assertEquals(expectedStatusCode, actualStatusCode,
-                String.format("Expected status code %d but got %d", expectedStatusCode, actualStatusCode));
-    }
 
     @Then("the response should contain a token")
     public void the_response_should_contain_a_token() {

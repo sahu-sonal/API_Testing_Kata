@@ -6,16 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// Model class representing authentication response
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-    @JsonProperty("token")
-    private String token;
+public class BookingDates {
+    @JsonProperty("checkin")
+    private String checkin;
     
-    @JsonProperty("error")
-    private String error;
+    @JsonProperty("checkout")
+    private String checkout;
 }
-

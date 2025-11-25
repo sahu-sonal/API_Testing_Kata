@@ -1,67 +1,186 @@
-# Kata API Testing in Java
+# API Testing Framework - Hotel Booking System
 
-API Testing and Java Exercise: Setting up a Basic API Test Automation Framework.
+A simple and clean API test automation framework built with Java, Rest-Assured, and Cucumber for testing hotel booking APIs.
 
-## Objective
-The objective of this exercise is to evaluate your knowledge on API testing and Java by setting up a basic API Test Automation framework using Rest-Assured and Cucumber. You will need to create a test suite that executes a few tests against one endpoint of a hotel booking website and evaluates their responses.
+## What's This?
 
-## Background
-The application under test is a simple hotel booking website where you can book a room and also send a form with a request.
+This project tests the Hotel Booking API at `https://automationintesting.online`. It covers authentication and all booking operations (create, get, update, patch, delete) with both positive and negative test cases.
 
-The website can be accessed at https://automationintesting.online/.
+## What You Need
 
-The Swagger documentation for the two endpoints you will be testing can be found at:
+- Java 17 or higher
+- Maven 3.6+
 
-Booking endpoint: https://automationintesting.online/booking/swagger-ui/index.html  
-Optionally, you also have the Authentican endpoint: https://automationintesting.online/auth/swagger-ui/index.html
+Check if you have them:
+```bash
+java -version
+mvn -version
+```
 
-### Swagger
-This website is an external application which is not in our control.  
-We noticed that the Swagger documentation is sometimes not available on the mentioned URL above.  
-As a backup, you can find the Swagger documentation in this repository at [src/test/resources/spec/booking.yaml](src/test/resources/spec/booking.yaml)
+## Quick Start
 
-The Open API Spec file is only supported in the Ultimate version of IntelliJ IDEA. But you can copy the content of the file and paste it in an online Swagger editor like https://editor.swagger.io/ to visualize the API documentation.
+1. **Clone and navigate to the project**
+   ```bash
+   cd API_Testing_Kata-main
+   ```
 
-### Authentication
-In order to authenticate yourself, the required credentials are:
-* Username: `admin`
-* Password: `password`
+2. **Install dependencies**
+   ```bash
+   mvn clean install
+   ```
 
-## Task
-You are provided with an extremely basic API test project.
+3. **Run all tests**
+   ```bash
+   mvn test
+   ```
 
-Please clone the project and create a new branch with your name. At the end, please push your branch to this project.
+That's it! The tests should run and generate reports in the `target` folder.
 
-The project to start from, can be found here: https://github.com/freddyschoeters/API_Testing_kata
+## Running Specific Tests
 
-Your task is to set up an API Test Automation framework from this project using Java, Rest-Assured, and Cucumber (feel free to add more dependencies if required).
+### Run by Tags
 
-It is up to you to define the test cases. You don’t need to have a full coverage, but you need to show enough variation on the types of tests that you would need to write and execute, and what to check in the response.
+```bash
+# Run only critical tests
+mvn test -Dcucumber.filter.tags="@sanity"
 
-This kata has the purpose to evaluate both your technical skills as well as your testing skills.
+# Run only positive tests
+mvn test -Dcucumber.filter.tags="@positive"
 
-`For this task, you will use the booking endpoint.`
+# Run only negative tests
+mvn test -Dcucumber.filter.tags="@negative"
 
+# Run regression suite
+mvn test -Dcucumber.filter.tags="@regression"
 
-## Requirements
-* Use Java as the programming language
-* Use Rest-Assured as the API testing library
-* Use Cucumber as the BDD framework
-* Design your codebase using a proper Java design pattern
-* Write good tests with correct checks
-* Use Git for version control and push your codebase to an open GitHub repository
-* Make regular commits to demonstrate your progress
+# Combine tags
+mvn test -Dcucumber.filter.tags="@sanity and @positive"
+```
 
+### Run Specific Feature
 
-## Deliverables
-* Your branch pushed in the provided project.
-* A comprehensive test suite covering the scenarios mentioned above
-* A well-structured codebase with proper design patterns and comments
-* Regular commits demonstrating your progress
+```bash
+mvn test -Dcucumber.features="src/test/resources/features/auth.feature"
+```
 
-## Evaluation Criteria
-* Being able to successfully run the tests
-* Correctness and completeness of the test suite
-* Quality of the codebase (design patterns, structure, code quality, …)
-* Use of Rest-Assured and Cucumber features
-* Commit history and progress demonstration
+### Run from IDE
+
+Just right-click on `TestRunner.java` and run it.
+
+## Test Tags Explained
+
+We use tags to organize tests:
+
+- **@sanity** - Quick smoke tests to verify basic functionality
+- **@positive** - Tests with valid inputs expecting success
+- **@negative** - Tests with invalid inputs expecting errors
+- **@regression** - Full test suite for regression testing
+
+Most tests have multiple tags like `@positive @sanity @regression`.
+
+## What APIs Are Tested?
+
+### Authentication (`/api/auth/login`)
+- ✅ Login with valid credentials
+- ✅ Login with invalid/empty credentials
+- ✅ Missing request body
+
+### Booking APIs (`/api/booking`)
+
+**Create Booking (POST)**
+- Valid booking creation
+- Field validations (name length, email format, phone length, dates, etc.)
+- Missing/empty required fields
+- Duplicate booking handling
+
+**Get Booking (GET `/api/booking/{id}`)**
+- Get booking with authentication
+- Get booking without auth (should fail)
+- Invalid/missing token scenarios
+- Non-existent booking
+
+**Update Booking (PUT `/api/booking/{id}`)**
+- Full update with valid data
+- Field validations
+- Authentication checks
+- Non-existent booking
+
+**Patch Booking (PATCH `/api/booking/{id}`)**
+- Partial updates (firstname, lastname, depositpaid)
+- Authentication checks
+- Field validations
+
+**Delete Booking (DELETE `/api/booking/{id}`)**
+- Delete with authentication
+- Delete without auth (should fail)
+- Invalid/missing token scenarios
+- Non-existent booking
+
+## Project Structure
+
+```
+src/test/
+├── java/com/booking/
+│   ├── config/
+│   │   └── ConfigManager.java          # API URLs and credentials
+│   ├── model/                          # Request/Response models
+│   ├── service/                        # API call logic
+│   │   ├── AuthService.java
+│   │   └── BookingService.java
+│   ├── stepdefinitions/                # Cucumber step definitions
+│   │   ├── CommonStepDefinitions.java  # Shared steps
+│   │   ├── AuthStepDefinitions.java
+│   │   └── Booking*StepDefinitions.java
+│   └── util/
+│       └── TestDataBuilder.java        # Test data generation
+└── resources/
+    ├── application.properties          # Configuration
+    └── features/                       # Cucumber feature files
+        ├── auth.feature
+        └── booking-*.feature
+```
+
+## Configuration
+
+Edit `src/test/resources/application.properties` if you need to change API URL or credentials:
+
+```properties
+api.base.url=https://automationintesting.online
+api.booking.endpoint=/api/booking
+api.auth.endpoint=/api/auth/login
+api.username=admin
+api.password=password
+```
+
+## How It Works
+
+1. **Feature Files** - Written in plain English (Gherkin) describing test scenarios
+2. **Step Definitions** - Java code that executes the steps in feature files
+3. **Service Layer** - Handles all API calls using Rest-Assured
+4. **Models** - Java classes representing request/response data
+5. **TestDataBuilder** - Creates test data with unique values to avoid conflicts
+
+The framework uses `ThreadLocal` to safely run tests in parallel, storing responses, tokens, and booking IDs per thread.
+
+## Reports
+
+After running tests, check:
+- **HTML Report**: `target/cucumber-reports.html` (open in browser)
+- **JSON Report**: `target/cucumber.json`
+- **Surefire Reports**: `target/surefire-reports/`
+
+## Technologies
+
+- Java 17
+- Maven
+- Rest-Assured 5.5.2
+- Cucumber 7.22.2
+- JUnit 5.12.2
+- Lombok (reduces boilerplate code)  1.18.38
+- Jackson (JSON handling) 2.16.2
+
+## API Documentation
+
+- Booking API: https://automationintesting.online/booking/swagger-ui/index.html
+- Auth API: https://automationintesting.online/auth/swagger-ui/index.html
+- OpenAPI Spec: `src/test/resources/spec/booking.yaml` 

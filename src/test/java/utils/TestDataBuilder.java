@@ -10,22 +10,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TestDataBuilder {
 
     public static Booking createValidBooking() {
-        // Generate unique identifier to avoid duplicate booking errors
         long uniqueId = System.currentTimeMillis() % 100000; // Use last 5 digits of timestamp
         int randomSuffix = ThreadLocalRandom.current().nextInt(100, 999); // Random 3-digit number
-        
+
         // Generate unique email, phone, and dates
         String uniqueEmail = "john.doe" + uniqueId + randomSuffix + "@example.com";
-        String uniquePhone = "123456789" + String.format("%02d", randomSuffix % 100);
-        
-        // Generate random room ID from valid range (1-10) - common room IDs that likely exist
-        int randomRoomId = ThreadLocalRandom.current().nextInt(1, 11);
-        
-        // Generate dates starting from today + 30 days to ensure future dates
-        LocalDate baseDate = LocalDate.now().plusDays(30);
+        String uniquePhone = "123456789" + randomSuffix;
+
+        // Generate random room ID from valid range (1-100) - room IDs that are accepted
+        int randomRoomId = ThreadLocalRandom.current().nextInt(1, 101);
+
+        // Generate unique dates - random offset from today (1-365 days) to ensure uniqueness
+        int randomOffset = ThreadLocalRandom.current().nextInt(1, 365);
+        LocalDate baseDate = LocalDate.now().plusDays(randomOffset);
         String checkin = baseDate.format(DateTimeFormatter.ISO_DATE);
         String checkout = baseDate.plusDays(2).format(DateTimeFormatter.ISO_DATE);
-        
+
         return Booking.builder()
                 .roomid(randomRoomId)
                 .firstname("John")

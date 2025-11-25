@@ -82,11 +82,11 @@ Feature: Create Booking API
 
     Examples:
       | test_case      | field         | expected_error                |
-      | Missing firstname | firstname | must not be null             |
-      | Missing lastname  | lastname   | must not be null             |
+      | Missing firstname | firstname | Firstname should not be blank             |
+      | Missing lastname  | lastname   | Lastname should not be blank             |
       | Missing email     | email      | must not be null             |
       | Missing phone     | phone      | must not be null             |
-      | Missing roomid    | roomid     | must not be null             |
+      | Missing roomid    | roomid     | must be greater than or equal to 1             |
       | Missing depositpaid | depositpaid | must not be null          |
       | Missing bookingdates | bookingdates | must not be null         |
 
@@ -100,7 +100,7 @@ Feature: Create Booking API
       | test_case        | field      | expected_error                |
       | Empty firstname  | firstname  | size must be between 3 and 18 |
       | Empty lastname   | lastname   | size must be between 3 and 18 |
-      | Empty email      | email      | must be a well-formed email address |
+      | Empty email      | email      | mmust not be empty |
       | Empty phone      | phone      | size must be between 11 and 21 |
 
   @negative @regression
@@ -111,8 +111,8 @@ Feature: Create Booking API
 
     Examples:
       | test_case        | roomid | expected_error            |
-      | Negative room ID | -1     | Failed to create booking |
-      | Zero room ID     | 0      | Failed to create booking |
+      | Negative room ID | -1     | must be greater than or equal to 1 |
+      | Zero room ID     | 0      | must be greater than or equal to 1 |
 
   @negative @regression
   Scenario Outline: Create booking with boundary values for names

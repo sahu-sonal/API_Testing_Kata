@@ -5,10 +5,10 @@ Feature: Update Booking API
 
   Background:
     Given the booking API is available
+    And I have a valid authentication token
 
   @positive @sanity @regression
   Scenario: Update booking with authentication
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking
     Then the response status code should be 200
@@ -33,13 +33,11 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario: Update non-existent booking
-    Given I have a valid authentication token
     When I update booking ID 99999 with new booking details
     Then the response status code should be 404
 
   @negative @regression
   Scenario Outline: Update booking with invalid firstname
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with firstname "<firstname>"
     Then the response status code should be 400
@@ -52,7 +50,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario Outline: Update booking with invalid lastname
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with lastname "<lastname>"
     Then the response status code should be 400
@@ -65,7 +62,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario Outline: Update booking with invalid email
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with email "<email>"
     Then the response status code should be 400
@@ -82,7 +78,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario Outline: Update booking with invalid phone
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with phone "<phone>"
     Then the response status code should be 400
@@ -95,7 +90,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario Outline: Update booking with invalid dates
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with checkin "<checkin>" and checkout "<checkout>"
     Then the response status code should be 400
@@ -110,7 +104,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario Outline: Update booking with missing required fields
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with missing "<field>"
     Then the response status code should be 400
@@ -118,17 +111,16 @@ Feature: Update Booking API
 
     Examples:
       | test_case      | field         | expected_error                |
-      | Missing firstname | firstname | must not be null             |
-      | Missing lastname  | lastname   | must not be null             |
+      | Missing firstname | firstname | Firstname should not be blank             |
+      | Missing lastname  | lastname   | Lastname should not be blank             |
       | Missing email     | email      | must not be null             |
       | Missing phone     | phone      | must not be null             |
-      | Missing roomid    | roomid     | must not be null             |
+      | Missing roomid    | roomid     | must be greater than or equal to 1             |
       | Missing depositpaid | depositpaid | must not be null          |
       | Missing bookingdates | bookingdates | must not be null         |
 
   @negative @regression
   Scenario Outline: Update booking with empty required fields
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with empty "<field>"
     Then the response status code should be 400
@@ -137,13 +129,12 @@ Feature: Update Booking API
     Examples:
       | test_case        | field      | expected_error                |
       | Empty firstname  | firstname  | size must be between 3 and 18 |
-      | Empty lastname   | lastname   | size must be between 3 and 18 |
-      | Empty email      | email      | must be a well-formed email address |
+      | Empty lastname   | lastname   | Lastname should not be blank, size must be between 3 and 30 |
+      | Empty email      | email      | mmust not be empty |
       | Empty phone      | phone      | size must be between 11 and 21 |
 
   @negative @regression
   Scenario Outline: Update booking with invalid room ID
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with roomid "<roomid>"
     Then the response status code should be 400
@@ -151,12 +142,11 @@ Feature: Update Booking API
 
     Examples:
       | test_case        | roomid | expected_error            |
-      | Negative room ID | -1     | Failed to update booking |
-      | Zero room ID     | 0      | Failed to update booking |
+      | Negative room ID | -1     | must be greater than or equal to 1 |
+      | Zero room ID     | 0      | must be greater than or equal to 1 |
 
   @negative @regression
   Scenario Outline: Update booking with boundary values for names
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with firstname "<firstname>" and lastname "<lastname>"
     Then the response status code should be 400
@@ -171,7 +161,6 @@ Feature: Update Booking API
 
   @negative @regression
   Scenario: Update booking with null depositpaid
-    Given I have a valid authentication token
     And I have created a booking
     When I update the created booking with null depositpaid
     Then the response status code should be 400

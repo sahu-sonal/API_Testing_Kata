@@ -5,10 +5,10 @@ Feature: Partial Update Booking API
 
   Background:
     Given the booking API is available
+    And I have a valid authentication token
 
   @positive @sanity @regression
   Scenario: Partially update booking firstname
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with firstname "NewFirstName"
     Then the response status code should be 200
@@ -16,7 +16,6 @@ Feature: Partial Update Booking API
 
   @positive @sanity @regression
   Scenario: Partially update booking lastname
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with lastname "NewLastName"
     Then the response status code should be 200
@@ -24,7 +23,6 @@ Feature: Partial Update Booking API
 
   @positive @sanity @regression
   Scenario: Partially update booking depositpaid
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with depositpaid "false"
     Then the response status code should be 200
@@ -49,13 +47,11 @@ Feature: Partial Update Booking API
 
   @negative @regression
   Scenario: Partially update non-existent booking
-    Given I have a valid authentication token
     When I partially update booking ID 99999 with firstname "NewName"
     Then the response status code should be 404
 
   @negative @regression
   Scenario Outline: Partially update booking with invalid firstname
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with firstname "<firstname>"
     Then the response status code should be 400
@@ -69,7 +65,6 @@ Feature: Partial Update Booking API
 
   @negative @regression
   Scenario Outline: Partially update booking with invalid lastname
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with lastname "<lastname>"
     Then the response status code should be 400
@@ -83,7 +78,6 @@ Feature: Partial Update Booking API
 
   @negative @regression
   Scenario Outline: Partially update booking with boundary values for names
-    Given I have a valid authentication token
     And I have created a booking
     When I partially update the created booking with firstname "<firstname>" and lastname "<lastname>"
     Then the response status code should be 400

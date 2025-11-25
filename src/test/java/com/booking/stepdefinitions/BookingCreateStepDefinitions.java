@@ -157,10 +157,5 @@ public class BookingCreateStepDefinitions {
         CommonStepDefinitions.validateBookingDetailsMatch(bookingResponse, bookingRequest);
     }
 
-    @Then("the response should contain validation error {string}")
-    public void the_response_should_contain_validation_error(String expectedError) {
-        // Use common validation method
-        CommonStepDefinitions.validateValidationError(bookingResponse, expectedError);
-    }
 }
 

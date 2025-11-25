@@ -6,7 +6,7 @@ Feature: Authentication API
   Background:
     Given the authentication API is available
 
-  @positive
+  @positive @sanity
   Scenario: Successful login with valid credentials
     When I send a POST request to "/auth/login" with valid credentials
     Then the response status code should be 200

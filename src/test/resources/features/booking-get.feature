@@ -5,10 +5,10 @@ Feature: Get Booking API
 
   Background:
     Given the booking API is available
+    And I have a valid authentication token
 
   @positive @sanity @regression
   Scenario: Get booking by ID with authentication
-    Given I have a valid authentication token
     And I have created a booking
     When I get the created booking
     Then the response status code should be 200
@@ -33,13 +33,11 @@ Feature: Get Booking API
 
   @negative @regression
   Scenario: Get non-existent booking
-    Given I have a valid authentication token
     When I get booking by ID 99999
     Then the response status code should be 404
 
   @negative @regression
   Scenario Outline: Get booking with invalid ID
-    Given I have a valid authentication token
     When I get booking by ID <booking_id>
     Then the response status code should be 404
 

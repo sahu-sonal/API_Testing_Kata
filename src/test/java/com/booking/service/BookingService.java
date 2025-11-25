@@ -115,5 +115,56 @@ public class BookingService {
                 .extract()
                 .response();
     }
+
+    public Response partialUpdateBooking(Integer bookingId, Booking booking, String token) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .contentType(ContentType.JSON)
+                .cookie("token", token)
+                .body(booking)
+                .when()
+                .patch(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response partialUpdateBookingWithoutAuth(Integer bookingId, Booking booking) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .contentType(ContentType.JSON)
+                .body(booking)
+                .when()
+                .patch(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response partialUpdateBookingWithInvalidToken(Integer bookingId, Booking booking, String invalidToken) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .contentType(ContentType.JSON)
+                .cookie("token", invalidToken)
+                .body(booking)
+                .when()
+                .patch(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response partialUpdateBookingWithEmptyToken(Integer bookingId, Booking booking) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .contentType(ContentType.JSON)
+                .cookie("token", "")
+                .body(booking)
+                .when()
+                .patch(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
 }
 

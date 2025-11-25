@@ -166,5 +166,48 @@ public class BookingService {
                 .extract()
                 .response();
     }
+
+    public Response getBookingById(Integer bookingId, String token) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .cookie("token", token)
+                .when()
+                .get(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response getBookingByIdWithoutAuth(Integer bookingId) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .when()
+                .get(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response getBookingByIdWithInvalidToken(Integer bookingId, String invalidToken) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .cookie("token", invalidToken)
+                .when()
+                .get(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
+
+    public Response getBookingByIdWithEmptyToken(Integer bookingId) {
+        return given()
+                .baseUri(ConfigManager.BASE_URL)
+                .cookie("token", "")
+                .when()
+                .get(ConfigManager.BOOKING_ENDPOINT + "/" + bookingId)
+                .then()
+                .extract()
+                .response();
+    }
 }
 

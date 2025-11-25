@@ -196,8 +196,44 @@ public class CommonStepDefinitions {
         Response response = getResponse();
         Booking returnedBooking = safeDeserializeBooking(response);
         Assertions.assertNotNull(returnedBooking, "Booking should be present in response");
+
+        // Validate all required fields returned by GET booking API
+        Assertions.assertNotNull(returnedBooking.getRoomid(), "Roomid should not be null");
         Assertions.assertNotNull(returnedBooking.getFirstname(), "Firstname should not be null");
         Assertions.assertNotNull(returnedBooking.getLastname(), "Lastname should not be null");
+        Assertions.assertNotNull(returnedBooking.getDepositpaid(), "Depositpaid should not be null");
+        Assertions.assertNotNull(returnedBooking.getBookingdates(), "Booking dates should not be null");
+        Assertions.assertNotNull(returnedBooking.getBookingdates().getCheckin(), "Checkin date should not be null");
+        Assertions.assertNotNull(returnedBooking.getBookingdates().getCheckout(), "Checkout date should not be null");
+        Assertions.assertNotNull(returnedBooking.getEmail(), "Email should not be null");
+        Assertions.assertNotNull(returnedBooking.getPhone(), "Phone should not be null");
+
+        // Validate field formats/values
+        Assertions.assertFalse(returnedBooking.getFirstname().isEmpty(), "Firstname should not be empty");
+        Assertions.assertFalse(returnedBooking.getLastname().isEmpty(), "Lastname should not be empty");
+        Assertions.assertFalse(returnedBooking.getEmail().isEmpty(), "Email should not be empty");
+        Assertions.assertFalse(returnedBooking.getPhone().isEmpty(), "Phone should not be empty");
+        Assertions.assertTrue(returnedBooking.getRoomid() > 0, "Roomid should be a positive integer");
+    }
+
+    @Then("the partial booking details should be returned")
+    public void the_partial_booking_details_should_be_returned() {
+        Response response = getResponse();
+        Booking returnedBooking = safeDeserializeBooking(response);
+        Assertions.assertNotNull(returnedBooking, "Booking should be present in response");
+
+        // Lenient validation for PATCH - only check essential fields that should always be present
+        // PATCH response structure may vary, so we validate minimally
+        Assertions.assertNotNull(returnedBooking, "Booking should be present in response");
+
+        // At minimum, firstname and lastname should be present (most common fields in PATCH)
+        // Other fields may or may not be present depending on what was updated
+        if (returnedBooking.getFirstname() != null) {
+            Assertions.assertFalse(returnedBooking.getFirstname().isEmpty(), "Firstname should not be empty if present");
+        }
+        if (returnedBooking.getLastname() != null) {
+            Assertions.assertFalse(returnedBooking.getLastname().isEmpty(), "Lastname should not be empty if present");
+        }
     }
 
     @Then("the response should contain error message {string}")

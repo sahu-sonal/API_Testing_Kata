@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Data
 @Builder
@@ -43,9 +45,10 @@ public class BookingResponse {
     private List<String> errors;
 
     public Booking getBooking() {
-        if (roomid == null && firstname == null && lastname == null) {
+        if (allPrimaryFieldsNull()) {
             return null;
         }
+
         return Booking.builder()
                 .roomid(roomid)
                 .firstname(firstname)
@@ -55,6 +58,11 @@ public class BookingResponse {
                 .email(email)
                 .phone(phone)
                 .build();
+    }
+
+    private boolean allPrimaryFieldsNull() {
+        return Stream.of(roomid, firstname, lastname)
+                .allMatch(Objects::isNull);
     }
 }
 

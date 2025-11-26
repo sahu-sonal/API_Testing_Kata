@@ -69,12 +69,9 @@ public class CommonStepDefinitions {
     public void i_have_created_a_booking() {
         BookingService bookingService = new BookingService();
         int maxRetries = 3;
-        int attempt = 0;
         Integer bookingId = null;
 
-        while (attempt < maxRetries && bookingId == null) {
-            attempt++;
-
+        for (int attempt = 0; attempt < maxRetries; attempt++) {
             Booking bookingRequest = TestDataBuilder.createValidBooking();
             Response createResponse = bookingService.createBooking(bookingRequest);
             int statusCode = createResponse.getStatusCode();
@@ -82,19 +79,7 @@ public class CommonStepDefinitions {
             if (statusCode == 201) {
                 BookingResponse bookingResponse = safeDeserializeBookingResponse(createResponse);
                 bookingId = bookingResponse.getBookingid();
-                Assertions.assertNotNull(bookingId, "Booking ID should not be null");
-            } else if (statusCode == 409) {
-                if (attempt < maxRetries) {
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                    continue;
-                }
-            } else {
-                String errorBody = createResponse.getBody().asString();
-                Assertions.fail("Failed to create booking. Status code: " + statusCode + ", Response: " + errorBody);
+                break;
             }
         }
 

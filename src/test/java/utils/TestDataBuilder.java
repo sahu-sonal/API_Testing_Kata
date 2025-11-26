@@ -81,7 +81,7 @@ public class TestDataBuilder {
 
     public static Booking createBookingWithoutField(String fieldName) {
         Booking booking = createValidBooking();
-        switch (fieldName.toLowerCase()) {
+        switch (fieldName) {
             case "roomid":
                 booking.setRoomid(null);
                 break;
@@ -111,7 +111,7 @@ public class TestDataBuilder {
 
     public static Booking createBookingWithEmptyField(String fieldName) {
         Booking booking = createValidBooking();
-        switch (fieldName.toLowerCase()) {
+        switch (fieldName) {
             case "firstname":
                 booking.setFirstname("");
                 break;

@@ -40,6 +40,45 @@ public class TestDataBuilder {
                 .build();
     }
 
+    public static Booking createBookingWithoutField(String fieldName) {
+        Booking booking = createValidBooking();
+        removeField(booking, fieldName);
+        return booking;
+    }
+
+    private static void removeField(Booking booking, String fieldName) {
+        if ("roomid".equals(fieldName)) booking.setRoomid(null);
+        else if ("firstname".equals(fieldName)) booking.setFirstname(null);
+        else if ("lastname".equals(fieldName)) booking.setLastname(null);
+        else if ("depositpaid".equals(fieldName)) booking.setDepositpaid(null);
+        else if ("bookingdates".equals(fieldName)) booking.setBookingdates(null);
+        else if ("email".equals(fieldName)) booking.setEmail(null);
+        else if ("phone".equals(fieldName)) booking.setPhone(null);
+    }
+
+    public static Booking createBookingWithEmptyField(String fieldName) {
+        Booking booking = createValidBooking();
+        emptyField(booking, fieldName);
+        return booking;
+    }
+
+    private static void emptyField(Booking booking, String fieldName) {
+        if ("firstname".equals(fieldName)) booking.setFirstname("");
+        else if ("lastname".equals(fieldName)) booking.setLastname("");
+        else if ("email".equals(fieldName)) booking.setEmail("");
+        else if ("phone".equals(fieldName)) booking.setPhone("");
+    }
+
+    public static Booking createPartialBookingUpdate(String firstname, String lastname, Boolean depositpaid) {
+        Booking booking = Booking.builder().build();
+
+        if (firstname != null) booking.setFirstname(firstname);
+        if (lastname != null) booking.setLastname(lastname);
+        if (depositpaid != null) booking.setDepositpaid(depositpaid);
+
+        return booking;
+    }
+
     public static Booking createBookingWithFirstname(String firstname) {
         Booking booking = createValidBooking();
         booking.setFirstname(firstname);
@@ -66,81 +105,13 @@ public class TestDataBuilder {
 
     public static Booking createBookingWithDates(String checkin, String checkout) {
         Booking booking = createValidBooking();
-        booking.setBookingdates(BookingDates.builder()
-                .checkin(checkin)
-                .checkout(checkout)
-                .build());
+        booking.setBookingdates(BookingDates.builder().checkin(checkin).checkout(checkout).build());
         return booking;
     }
 
     public static Booking createBookingWithRoomid(Integer roomid) {
         Booking booking = createValidBooking();
         booking.setRoomid(roomid);
-        return booking;
-    }
-
-    public static Booking createBookingWithoutField(String fieldName) {
-        Booking booking = createValidBooking();
-        switch (fieldName) {
-            case "roomid":
-                booking.setRoomid(null);
-                break;
-            case "firstname":
-                booking.setFirstname(null);
-                break;
-            case "lastname":
-                booking.setLastname(null);
-                break;
-            case "depositpaid":
-                booking.setDepositpaid(null);
-                break;
-            case "bookingdates":
-                booking.setBookingdates(null);
-                break;
-            case "email":
-                booking.setEmail(null);
-                break;
-            case "phone":
-                booking.setPhone(null);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown field: " + fieldName);
-        }
-        return booking;
-    }
-
-    public static Booking createBookingWithEmptyField(String fieldName) {
-        Booking booking = createValidBooking();
-        switch (fieldName) {
-            case "firstname":
-                booking.setFirstname("");
-                break;
-            case "lastname":
-                booking.setLastname("");
-                break;
-            case "email":
-                booking.setEmail("");
-                break;
-            case "phone":
-                booking.setPhone("");
-                break;
-            default:
-                throw new IllegalArgumentException("Field cannot be set as empty: " + fieldName);
-        }
-        return booking;
-    }
-
-    public static Booking createPartialBookingUpdate(String firstname, String lastname, Boolean depositpaid) {
-        Booking booking = Booking.builder().build();
-        if (firstname != null) {
-            booking.setFirstname(firstname);
-        }
-        if (lastname != null) {
-            booking.setLastname(lastname);
-        }
-        if (depositpaid != null) {
-            booking.setDepositpaid(depositpaid);
-        }
         return booking;
     }
 }
